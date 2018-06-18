@@ -1,0 +1,15 @@
+syntax = "proto3";
+package gorpctutor.genfile;
+option go_package = "main";
+
+import "github.com/google/protobuf/timestamp.proto";
+
+message StreamData {
+    int64       ID = 1; 
+    repeated  string Values=2; 
+    google.protobuf.Timestamp   TimeStamp = 3;
+}
+
+service demostream {
+    rpc EchangerStream(stream StreamData) returns (stream StreamData){}
+}

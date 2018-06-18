@@ -1,0 +1,28 @@
+syntax = "proto3";
+package gopbtutor.hellow;
+option go_package = "main";
+
+message TransRequest  {
+    string buyername = 1;
+    repeated int32 counts = 2;
+    map<string, int32> itemlist = 3;
+}
+
+message TransResponse  {
+    bool accept = 1;
+    int32 total = 2;
+
+    enum OrderStatue {
+      ACCEPT = 0;
+      PENDING = 1;
+      DELIEVERED = 2;
+      FINISHED = 3;
+    }
+
+    map<string, OrderStatue> Statues = 3;
+}
+
+service PurchaseOrderService {
+    rpc Purchase (TransRequest) returns (TransResponse){}
+}
+
