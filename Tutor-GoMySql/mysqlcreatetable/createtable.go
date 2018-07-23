@@ -64,6 +64,7 @@ func formTestColumnData() []MysqlDBField {
 	fields[1].fldType = "varchar(255)"
 	fields[1].deflt = true
 	fields[1].defltValue = "ananoym player"
+	fields[1].index = true
 
 	fields[2].fldName = "online"
 	fields[2].fldType = "char(1)"
@@ -80,6 +81,7 @@ func formTestColumnData() []MysqlDBField {
 func createTableIfNotExist(db *sql.DB, tablename string, fields []MysqlDBField) {
 	stmtStr := "CREATE TABLE IF NOT EXISTS " + tablename + " ( \n"
 
+	var indexKey string
 	var primaryKey string
 	foreignKeys := make(map[string]string)
 	for i, field := range fields {
@@ -90,6 +92,10 @@ func createTableIfNotExist(db *sql.DB, tablename string, fields []MysqlDBField) 
 		}
 		if field.autoinc {
 			stmtStr += " AUTO_INCREMENT "
+		}
+
+		if field.index {
+			indexKey = field.fldName
 		}
 
 		if field.deflt {
@@ -120,6 +126,10 @@ func createTableIfNotExist(db *sql.DB, tablename string, fields []MysqlDBField) 
 
 	for k, v := range foreignKeys {
 		stmtStr += ",\n FOREIGN KEY (" + k + ") REFERENCES " + v
+	}
+
+	if indexKey != "" {
+		stmtStr += ",\n INDEX(" + indexKey + ")"
 	}
 
 	stmtStr += "\n)"
