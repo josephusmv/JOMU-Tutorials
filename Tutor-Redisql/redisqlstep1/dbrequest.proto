@@ -1,0 +1,43 @@
+syntax = "proto3";
+package josephusmv.redisql;
+option go_package = "main";
+
+message DBAction {
+  int32 method = 1;
+  string tableName = 2;
+  map<string, int32> itemlist = 3;
+}
+
+message DBFieldDefine {
+	string FldName = 1;
+	string FldType =2;
+	bool   NotNull     =  3;
+	bool   IsIndex     =  4;
+	bool   IsPrimKey   =  5;
+	bool   IsFrgnKey   =  6;
+	string FrgnTable   =  7;
+	bool   IsUnique    =  8;
+	bool   HasDefault  =  9;
+	string DefaultValue=  10;
+	bool   AutoIncr    =  11;
+}
+
+message DBFieldValue {
+  oneof value_oneof {
+    string strVal = 1;
+    int32 intVal = 2;
+    bool  boolVal = 3;
+    bytes blobVal = 4;
+  }
+}
+
+message DBCreateTable {
+  DBFieldDefine flddefine = 1;
+}
+
+
+message DBSelect{
+  repeated string cols=1;
+  string where = 2;
+  repeated DBFieldValue bindVars = 3;
+}

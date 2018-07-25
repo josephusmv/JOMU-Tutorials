@@ -43,7 +43,8 @@ func connectDB(dbname, userpwd string) *sql.DB {
 func main() {
 
 	add := flag.Bool("add", false, "Add New Values.")
-	del := flag.Bool("del", false, "Add New Values.")
+	qry := flag.Bool("qry", false, "Query New Values.")
+	del := flag.Bool("del", false, "Delete New Values.")
 	test := flag.Bool("test", false, "use test values.")
 	flag.Parse()
 	if *add {
@@ -52,6 +53,10 @@ func main() {
 
 	if *del {
 		doDelete(*test)
+	}
+
+	if *qry {
+		doSelect(*test)
 	}
 }
 
@@ -73,6 +78,39 @@ func doAdd(test bool) {
 	defer db.Close()
 
 	doInsert(db, cStrDefaultTBLName, inputs)
+}
+func doSelect(test bool) {
+
+	db := connectDB(cStrDefaultDBName, "jomu:123456")
+	defer db.Close()
+
+	stmtStr := fmt.Sprintf("SELECT * FROM %s where player_name like ?", cStrDefaultTBLName)
+	fmt.Println(stmtStr)
+
+	stmt, errprp := db.Prepare(stmtStr)
+	checkErr(errprp)
+
+	fldValue := "%it"
+	rows, errq := stmt.Query(fldValue)
+	checkErr(errq)
+	defer rows.Close()
+
+	var id int
+	var name string
+	var online string
+	var addr string
+	rslts := make([]interface{}, 4)
+	rslts[0] = &id
+	rslts[1] = &name
+	rslts[2] = &online
+	rslts[3] = &addr
+
+	for rows.Next() {
+		err := rows.Scan(rslts...)
+		checkErr(err)
+	}
+
+	fmt.Printf("%d, %s, %s, %s\n", id, name, online, addr)
 }
 
 type MySqlExeRslt struct {
