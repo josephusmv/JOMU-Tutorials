@@ -22,11 +22,13 @@ type DBFieldDefn struct {
 	AutoIncr     bool
 }
 
+/*
 type DBFieldValue struct {
 	fldType  string
 	fldName  string
 	fldValue interface{}
 }
+*/
 
 type DBRowValues []DBFieldValue
 

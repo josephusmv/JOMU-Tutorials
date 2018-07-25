@@ -2,11 +2,6 @@ syntax = "proto3";
 package josephusmv.redisql;
 option go_package = "main";
 
-message DBAction {
-  int32 method = 1;
-  string tableName = 2;
-  map<string, int32> itemlist = 3;
-}
 
 message DBFieldDefine {
 	string FldName = 1;
@@ -35,9 +30,49 @@ message DBCreateTable {
   DBFieldDefine flddefine = 1;
 }
 
+message DBDropTable {
+}
 
 message DBSelect{
   repeated string cols=1;
   string where = 2;
   repeated DBFieldValue bindVars = 3;
 }
+
+message DBInsert {
+  repeated string cols=1;
+  repeated DBFieldValue bindVars = 3;
+}
+
+message DBUpdate {
+  repeated string cols=1;
+  string where = 2;
+  repeated DBFieldValue bindVars = 3;
+}
+
+message DBDelete {
+  string where = 2;
+  repeated DBFieldValue bindVars = 3;
+}
+
+enum DBMethod{
+  SELECT = 0;
+  CREATETBL = 1;
+  UPDATE = 2;
+  INSERT =3;
+  DELETE = 4;
+  DROP = 5;
+}
+
+message DBAction {
+  DBMethod method = 1;
+  oneof mthd_oneof {
+    DBCreateTable create = 2;
+    DBSelect select = 3;
+    DBInsert insert = 4;
+    DBUpdate update=5;
+    DBDelete delete=6;
+    DBDropTable drop = 7;
+  }
+}
+

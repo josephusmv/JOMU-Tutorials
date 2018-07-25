@@ -17,5 +17,3 @@ func (dbt *DBTransaction) Stop() {
 
 	dbt.dbopr.Close()
 }
-
-func (dbt *DBTransaction) 
