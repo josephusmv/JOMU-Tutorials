@@ -1,0 +1,12 @@
+syntax = "proto3";
+package josephusmv.redisql;
+option go_package = "main";
+
+
+
+message PlayersTable {
+    int32 id = 1;
+    string player_name = 2;
+    string online = 3;
+    string address = 4;
+}
